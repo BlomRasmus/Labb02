@@ -14,7 +14,6 @@ public class Wall : LevelElements
 
         elementChar = '#';
 
-
     }
 
 }

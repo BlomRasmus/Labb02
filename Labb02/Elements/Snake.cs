@@ -42,21 +42,21 @@ internal class Snake : Enemy
 
     private void MoveAwayFromPlayer(Enemy snake, Positions playerPos, Positions snakePos)
     {
-        if(playerPos.Y < snakePos.Y)
-        {
-            Movement.MoveDown(snake);
-        }
-        else if(playerPos.Y > snakePos.Y)
-        {
-            Movement.MoveUp(snake);
-        }
-        else if(playerPos.X < snakePos.X)
+        if(playerPos.X < snakePos.X)
         {
             Movement.MoveRight(snake);
         }
-        else
+        else if (playerPos.X > snakePos.X)
         {
             Movement.MoveLeft(snake);
+        }
+        else if(playerPos.Y < snakePos.Y)
+        {
+            Movement.MoveDown(snake);
+        }
+        else if (playerPos.Y > snakePos.Y)
+        {
+            Movement.MoveUp(snake);
         }
     }
 

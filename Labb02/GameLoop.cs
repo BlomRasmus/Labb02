@@ -8,49 +8,30 @@ class GameLoop
     public static void Run()
     {
         Console.CursorVisible = false;
+        Console.Write("Please write your username: ");
+        string userName = Console.ReadLine();
+        int turnCounter = 1;
 
         while (true)
         {
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            Console.SetCursorPosition(0, 0);
+            Console.WriteLine($"Player: {userName} - {player.Health} HP - Turn: {turnCounter}".PadRight(Console.WindowWidth, ' '));
             Console.ResetColor();
-            Console.SetCursorPosition(0, 0);
-            Console.Write(new string (' ', Console.WindowWidth));
 
-            Console.SetCursorPosition(0, 0);
-            Console.WriteLine($"Player: {player.Health} HP");
+            player.PrintVision();
 
-            Vision.PrintVision();
+            player.MovePlayer();
 
-            var input = Console.ReadKey();
-            switch (input.Key)
-            {
-                case ConsoleKey.RightArrow:
-                    Movement.MoveRight(player);             
-                    break;
-
-                case ConsoleKey.LeftArrow:
-                    Movement.MoveLeft(player);
-                    break;
-
-                case ConsoleKey.DownArrow:
-                    Movement.MoveDown(player);
-                    break;
-
-                case ConsoleKey.UpArrow:
-                    Movement.MoveUp(player);
-                    break;
-                default:
-                    Movement.InvalidInput();
-                    break;
-            }
+            Enemy.MoveEnemies(LevelData.Elements);
 
             if (player.Health <= 0)
             {
-                Console.Clear();
-                Console.SetCursorPosition(0, 0);
+                player.PrintGameOver();
                 break;
             }
 
-            Movement.MoveEnemies(LevelData.Elements);
+            turnCounter++;
         }
     }
 }

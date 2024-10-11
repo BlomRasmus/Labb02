@@ -1,16 +1,7 @@
 ﻿using System.Xml.Linq;
 
-class Movement
+static class Movement
 {
-    public static void MoveEnemies(List<LevelElements> elements)
-    {
-        var enemies = LevelData.Elements.OfType<Enemy>().ToList();
-        for (int i = 0; i < enemies.Count(); i++)
-        {
-            enemies[i].Update();
-        }
-    }
-
     public static void MoveRight(LevelElements element)
     {
         Positions testPosition = new Positions { X = element.Position.X + 1, Y = element.Position.Y };
@@ -114,84 +105,27 @@ class Movement
         return move;
     }
 
-    protected static void Attack(LevelElements attackingElement, LevelElements defendingElement)
+    public static void Attack(LevelElements attackingElement, LevelElements defendingElement)
     {
+
         if (attackingElement is Enemy && defendingElement is Player)
         {
+
             Console.SetCursorPosition(0, 1);
-            AttackingEnemy(attackingElement as Enemy, defendingElement as Player);
+            Enemy.AttackingEnemy(attackingElement as Enemy, GameLoop.player);
             if((defendingElement as Player).Health > 0)
             {
-                AttackingPlayer(defendingElement as Player, attackingElement as Enemy);
+                defendingElement = attackingElement;
+                Player.AttackingPlayer(GameLoop.player, defendingElement as Enemy);
             }
         }
         else if(attackingElement is Player && defendingElement is Enemy)
         {
             Console.SetCursorPosition(0, 1);
-            AttackingPlayer(attackingElement as Player, defendingElement as Enemy);
-
-            if((defendingElement as Enemy).Health > 0)
-            {
-                AttackingEnemy(defendingElement as Enemy, GameLoop.player);
-            }
-        }
-    }
-
-    public static void AttackingEnemy(Enemy enemy, Player player)
-    {
-        int attack = enemy.AttackDice.Throw();
-        int defence = GameLoop.player.DefenceDice.Throw();
-        int damage = attack - defence;
-
-
-        if (damage <= 0)
-        {
-            damage = 0;
-        }
-
-
-        Console.ForegroundColor = enemy.color;
-        Console.WriteLine($"{enemy}: {enemy.Health} HP, {enemy.AttackDice}: {enemy} attacks for {attack} damage. You defend {defence} damage, taking {damage}".PadRight(Console.BufferWidth, ' '));
-        Console.ResetColor();
-
-        GameLoop.player.Health -= damage;
-    }
-
-    public static void AttackingPlayer(Player player, Enemy enemy)
-    {
-        int attack = GameLoop.player.AttackDice.Throw();
-        int defence = enemy.DefenceDice.Throw();
-        int damage = attack - defence;
-
-
-        if (damage <= 0)
-        {
-            damage = 0;
-        }
-
-            enemy.Health -= damage;
-
-        if (enemy.Health <= 0)
-        {
-            Console.SetCursorPosition(0, 1);
-
-            Console.Write(new string(' ', Console.WindowWidth));
-            Console.Write(new string(' ', Console.WindowWidth));
-
-            Console.SetCursorPosition(0, 1);
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine($"Player: {GameLoop.player.Health} HP, {GameLoop.player.AttackDice}: the player attacks for {attack} damage, killing {enemy} immediately");
-            Console.ResetColor();
-
-            Console.SetCursorPosition(enemy.Position.X, enemy.Position.Y);
-            Console.Write(' ');
-            LevelData.Elements.Remove(enemy);
-        }
-        else
-        {
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine($"Player: {GameLoop.player.AttackDice}: the player attacks for {attack} damage. {enemy} defends {defence} damage, taking {damage}".PadRight(Console.BufferWidth, ' '));
-            Console.ResetColor();
+            Player.AttackingPlayer(GameLoop.player, defendingElement as Enemy);
+            attackingElement = defendingElement;
+            Enemy.AttackingEnemy(attackingElement as Enemy, GameLoop.player);
+           
         }
     }
 

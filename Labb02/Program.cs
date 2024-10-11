@@ -10,5 +10,3 @@ levelData.Load(fileName);
 
 GameLoop.Run();
 
-Console.Clear();
-Console.WriteLine("GAME OVER!");

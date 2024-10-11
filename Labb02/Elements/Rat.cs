@@ -17,14 +17,14 @@ internal class Rat : Enemy
 
     public override void Update()
     {
-        moveRat(this);
+        MoveRat(this);
     }
 
-    private void moveRat(Enemy rat)
+    private void MoveRat(Enemy rat)
     {
-        Random rnd = new Random();
+        Random randomDirection = new Random();
                 
-        switch(rnd.Next(1, 5))
+        switch(randomDirection.Next(1, 5))
         {
             case 1:
                 Movement.MoveRight(rat);
